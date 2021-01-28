@@ -1,33 +1,27 @@
 package com.example.springboot;
 
-import java.util.Arrays;
-
-import org.springframework.boot.CommandLineRunner;
+import java.util.Properties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		Properties properties = new Properties();
+
+		properties.put("management.endpoints.enabled-by-default", "false");
+
+		properties.put("management.endpoints.web.exposure.include", "prometheus");
+		properties.put("management.endpoint.prometheus.enabled", "true");
+		properties.put("management.metrics.export.prometheus.enabled", "true");
+
+		SpringApplication application = new SpringApplication(Application.class);
+
+		application.setDefaultProperties(properties);
+
+		application.run(args);
 	}
 
-	@Bean
-	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-		return args -> {
-
-			System.out.println("Let's inspect the beans provided by Spring Boot:");
-
-			String[] beanNames = ctx.getBeanDefinitionNames();
-			Arrays.sort(beanNames);
-			for (String beanName : beanNames) {
-				System.out.println(beanName);
-			}
-
-		};
-	}
 
 }
